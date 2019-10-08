@@ -3,15 +3,15 @@
  * Plugin Name: Product classifier
  * Author: Fellyph
  * Version: 1.0.0
+ * @package PHWP
  */
  
-function loadMyBlock() {
-  wp_enqueue_script(
-    'product-classifier',
-    plugin_dir_url(__FILE__) . 'test-block.js',
-    array('wp-blocks','wp-editor'),
-    true
-  );
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
-  
-add_action('enqueue_block_editor_assets', 'loadMyBlock');
+
+/**
+ * Block Initializer.
+ */
+require_once plugin_dir_path( __FILE__ ) . 'src/init.php';

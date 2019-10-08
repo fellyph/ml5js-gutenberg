@@ -11,12 +11,11 @@
 		"Examples"
 	],
 	"scripts": {
-		"lint-js": "wp-scripts lint-js ./product-classifier",
+		"lint-js": "wp-scripts lint-js ./src/js",
 		"lint-js:fix": "npm run lint-js -- --fix",
-		"env:start": "docker-compose up -d",
-		"env:stop": "docker-compose stop",
-		"build": "npm run build:product-classifier",
-		"build:product-classifier": "wp-scripts build product-classifier/src/index.js --output-path=product-classifier/build"
+		"build": "npm run build:block",
+        "build:block": "wp-scripts build src/js/index.js --output-path=build",
+        "build:front": "wp-scripts build src/js/frontend.js --output-path=build"
 	},
 	"devDependencies": {
 		"@wordpress/components": "^8.1.0",
