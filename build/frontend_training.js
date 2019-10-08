@@ -10,12 +10,6 @@ function modelReady() {
   console.log('Model is ready!!!');
 }
 
-function customModelReady() {
-  console.log('Custom Model is ready!!!');
-  label = 'model ready';
-  classifier.classify(gotResults);
-}
-
 function videoReady() {
   console.log('Video is ready!!!');
 }
@@ -50,16 +44,16 @@ function setup() {
   mobilenet = ml5.featureExtractor('MobileNet', modelReady);
   classifier = mobilenet.classification(video, videoReady);
 
-  Product1 = createButton('happy');
+  Product1 = createButton('Product 1');
   Product1.parent(containerBlock);
   Product1.mousePressed(function() {
-    classifier.addImage('happy');
+    classifier.addImage('Product 1');
   });
 
-  Product2 = createButton('sad');
+  Product2 = createButton('Product 2');
   Product2.parent(containerBlock);
   Product2.mousePressed(function() {
-    classifier.addImage('sad');
+    classifier.addImage('Product 2');
   });
 
   trainButton = createButton('train');
