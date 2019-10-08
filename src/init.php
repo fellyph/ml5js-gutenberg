@@ -34,9 +34,6 @@ add_action( 'init', 'products_editor_assets' );
 
 // Hook: Front-end assets.
 function frontend_assets() {
-    // automatically load dependencies and version
-    $asset_frontend_file = include( plugin_dir_path( __FILE__ ) . '../build/frontend.asset.php');
-
     wp_register_script(
 		'product-frontend-js', // Handle.
         plugins_url( 'build/frontend.js', dirname( __FILE__ ) )

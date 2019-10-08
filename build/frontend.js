@@ -1,12 +1,10 @@
 let mobilenet;
 let classifier;
 let video;
-let label = 'test';
+let label = 'wc thessaloniki';
 let ukeButton;
 let whistleButton;
 let trainButton;
-
-alert('test');
 
 function modelReady() {
   console.log('Model is ready!!!');
@@ -30,30 +28,36 @@ function gotResults(error, result) {
   if (error) {
     console.error(error);
   } else {
-    label = result;
+    label = `${result[0].label} ${result[0].confidence}`;
     classifier.classify(gotResults);
   }
 }
 
 function setup() {
-  createCanvas(320, 270);
+  let containerBlock = document.querySelector('.product-classifier');
+  let myCanvas = createCanvas(320, 270);
+  myCanvas.parent(containerBlock);
   video = createCapture(VIDEO);
   video.hide();
   background(0);
+
   mobilenet = ml5.featureExtractor('MobileNet', modelReady);
   classifier = mobilenet.classification(video, videoReady);
 
   ukeButton = createButton('happy');
+  ukeButton.parent(containerBlock);
   ukeButton.mousePressed(function() {
     classifier.addImage('happy');
   });
 
   whistleButton = createButton('sad');
+  whistleButton.parent(containerBlock);
   whistleButton.mousePressed(function() {
     classifier.addImage('sad');
   });
 
   trainButton = createButton('train');
+  trainButton.parent(containerBlock);
   trainButton.mousePressed(function() {
     classifier.train(whileTraining);
   });
