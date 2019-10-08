@@ -2,9 +2,14 @@ let mobilenet;
 let classifier;
 let video;
 let label = 'wc thessaloniki';
-let Product1;
-let Product2;
+let product1;
+let product2;
 let trainButton;
+let videoWidth = 320;
+let videoHeight = 270;
+let barWidth = 20;
+let barHeight = videoHeight - 2;
+let percentage = 1;
 
 function modelReady() {
   console.log('Model is ready!!!');
@@ -23,19 +28,20 @@ function whileTraining(loss) {
   }
 }
 
-
 function gotResults(error, result) {
   if (error) {
     console.error(error);
   } else {
-    label = `${result[0].label} ${result[0].confidence}`;
+    label = `${result[0].label}`;
+    percentage = result[0].confidence;
     classifier.classify(gotResults);
   }
 }
 
 function setup() {
+  let myCanvas = createCanvas(videoWidth + barWidth, videoHeight);
   let containerBlock = document.querySelector('.product-classifier');
-  let myCanvas = createCanvas(320, 270);
+
   myCanvas.parent(containerBlock);
   video = createCapture(VIDEO);
   video.hide();
@@ -44,15 +50,15 @@ function setup() {
   mobilenet = ml5.featureExtractor('MobileNet', modelReady);
   classifier = mobilenet.classification(video, videoReady);
 
-  Product1 = createButton('Product 1');
-  Product1.parent(containerBlock);
-  Product1.mousePressed(function() {
+  product1 = createButton('Product 1');
+  product1.parent(containerBlock);
+  product1.mousePressed(function() {
     classifier.addImage('Product 1');
   });
 
-  Product2 = createButton('Product 2');
-  Product2.parent(containerBlock);
-  Product2.mousePressed(function() {
+  product2 = createButton('Product 2');
+  product2.parent(containerBlock);
+  product2.mousePressed(function() {
     classifier.addImage('Product 2');
   });
 
@@ -69,4 +75,5 @@ function draw() {
   fill(255);
   textSize(16);
   text(label, 10, height - 10);
+  rect(videoWidth - 1, 1, barWidth, barHeight * percentage);
 }

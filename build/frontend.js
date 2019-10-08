@@ -2,26 +2,23 @@ let mobilenet;
 let classifier;
 let video;
 let label = 'wc thessaloniki';
-let Product1;
+let product1;
 let Product2;
 let trainButton;
+let scale = 0;
+let imageWidth = 320;
+let imageHeight = 270;
 
 function modelReady() {
-  console.log('Model is ready!!!');
-}
-
-function customModelReady() {
-  console.log('Custom Model is ready!!!');
-  label = 'model ready';
-  classifier.classify(gotResults);
+  console.log('Model is ready !!!');
 }
 
 function videoReady() {
-  console.log('Video is ready!!!');
+  console.log('Video is ready !!!');
 }
 
 function whileTraining(loss) {
-  if (loss == null) {
+  if (loss === null) {
     console.log('Training Complete');
     classifier.classify(gotResults);
   } else {
@@ -34,14 +31,15 @@ function gotResults(error, result) {
   if (error) {
     console.error(error);
   } else {
-    label = `${result[0].label} ${result[0].confidence}`;
+    label = `${result[0].label}`;
+    scale = result[0].confidence;
     classifier.classify(gotResults);
   }
 }
 
 function setup() {
   let containerBlock = document.querySelector('.product-classifier');
-  let myCanvas = createCanvas(320, 270);
+  let myCanvas = createCanvas(imageWidth, imageHeight);
   myCanvas.parent(containerBlock);
   video = createCapture(VIDEO);
   video.hide();
@@ -50,16 +48,16 @@ function setup() {
   mobilenet = ml5.featureExtractor('MobileNet', modelReady);
   classifier = mobilenet.classification(video, videoReady);
 
-  Product1 = createButton('happy');
-  Product1.parent(containerBlock);
-  Product1.mousePressed(function() {
-    classifier.addImage('happy');
+  product1 = createButton('Product 1');
+  product1.parent(containerBlock);
+  product1.mousePressed(function() {
+    classifier.addImage('Product 1');
   });
 
-  Product2 = createButton('sad');
+  Product2 = createButton('Product 2');
   Product2.parent(containerBlock);
   Product2.mousePressed(function() {
-    classifier.addImage('sad');
+    classifier.addImage('Product 2');
   });
 
   trainButton = createButton('train');
@@ -71,8 +69,9 @@ function setup() {
 
 function draw() {
   background(0);
-  image(video, 0, 0, 320, 240);
+  image(video, 0, 0, imageHeight, imageHeight - 30);
   fill(255);
   textSize(16);
   text(label, 10, height - 10);
+  rect()
 }
