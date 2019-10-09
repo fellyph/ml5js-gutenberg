@@ -3,32 +3,48 @@ let classifier;
 let video;
 let controlsContainer;
 let containerBlock;
-let label = 'wc thessaloniki';
-let product1;
-let product2;
-let product3;
-let trainButton;
-let saveButton;
+let label = 'Loading...';
 let scale = 0;
+let productURL = '#';
+let linkProduct;
 let imageWidth = 320;
 let imageHeight = 270;
+let pluginURL = wpProperties.pluginsUrl;
 
-function whileTraining(loss) {
-  if (loss === null) {
-    console.log('Training Complete');
-    classifier.classify(gotResults);
-  } else {
-    console.log(loss);
-  }
+// we can call json API to call the products a label them by ID
+let data =  {
+  'Product 1': {
+    title: 'The Subtle Art of not giving a F*CK – Mark Manson',
+    'url': 'http://wcthessaloniki.local/the-subtle-art-of-not-giving-a-fck-mark-manson/'
+  },
+  'Product 2': {
+    title: 'The Martian – Andy Weir',
+    'url': 'http://wcthessaloniki.local/the-martian-andy-weir/'
+  },
+  'Product 3': {
+    title: 'The girl on the train – Paula Hawkins',
+    'url': 'http://wcthessaloniki.local/the-girl-on-the-train-paula-hawkins/'
+  },
+};
+
+function mobileNetIsReady() {
+  classifier.load(`${pluginURL}/build/assets/model.json`, customModelIsReady);
+}
+
+function customModelIsReady() {
+  classifier.classify(gotResults);
 }
 
 function gotResults(error, result) {
   if (error) {
-    console.error(error);
+   label = error;
   } else {
-    console.log(result)
-    label = `${result[0].label}`;
-    scale = result[0].confidence;
+    console.log(result[0].label, result[0].confidence);
+    if(result[0].confidence > 0.85) {
+      addLink(data[result[0].label].title, data[result[0].label].url );
+    } else {
+      label = 'Please, show your book';
+    }
     classifier.classify(gotResults);
   }
 }
@@ -36,52 +52,31 @@ function gotResults(error, result) {
 function setup() {
   containerBlock = document.querySelector('.product-classifier');
   let myCanvas = createCanvas(imageWidth, imageHeight);
-
   myCanvas.parent(containerBlock);
   video = createCapture(VIDEO);
   video.hide();
   background(0);
 
-  featureExtrator = ml5.featureExtractor('MobileNet');
+  featureExtrator = ml5.featureExtractor('MobileNet', mobileNetIsReady);
   classifier = featureExtrator.classification(video, { numLabels: 3 }, () => {
     console.log('classifier is ready!')
   });
-  setupButton();
+
+  setupControls()
 }
 
-function setupButton() {
+function setupControls() {
   controlsContainer = createDiv();
   controlsContainer.parent(containerBlock);
+  linkProduct = createA(productURL, 'Buy it!');
+  linkProduct.parent(controlsContainer);
+  controlsContainer.hide();
+}
 
-  product1 = createButton('Product 1');
-  product1.parent(controlsContainer);
-  product1.mousePressed(function() {
-    classifier.addImage('Product 1');
-  });
-
-  product2 = createButton('Product 2');
-  product2.parent(controlsContainer);
-  product2.mousePressed(function() {
-    classifier.addImage('Product 2');
-  });
-
-  product3 = createButton('Product 3');
-  product3.parent(controlsContainer);
-  product3.mousePressed(function() {
-    classifier.addImage('Product 3');
-  });
-
-  trainButton = createButton('train');
-  trainButton.parent(controlsContainer);
-  trainButton.mousePressed(function() {
-    classifier.train(whileTraining);
-  });
-
-  saveButton = createButton('Saves');
-  saveButton.parent(controlsContainer);
-  saveButton.mousePressed(function() {
-    classifier.save();
-  });
+function addLink(title, url) {
+  label = title;
+  linkProduct.attribute('href', url);
+  controlsContainer.show()
 }
 
 function draw() {
