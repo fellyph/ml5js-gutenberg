@@ -27,42 +27,32 @@ let data =  {
   },
 };
 
-function mobileNetIsReady() {
-  classifier.load(`${pluginURL}/build/assets/model.json`, customModelIsReady);
-}
-
-function customModelIsReady() {
-  classifier.classify(gotResults);
-}
-
 function gotResults(error, result) {
   if (error) {
    label = error;
   } else {
-    console.log(result[0].label, result[0].confidence);
     if(result[0].confidence > 0.85) {
       addLink(data[result[0].label].title, data[result[0].label].url );
     } else {
       label = 'Please, show your book';
+      controlsContainer.hide();
     }
     classifier.classify(gotResults);
   }
 }
 
 function setup() {
-  containerBlock = document.querySelector('.product-classifier');
-  let myCanvas = createCanvas(imageWidth, imageHeight);
-  myCanvas.parent(containerBlock);
-  video = createCapture(VIDEO);
-  video.hide();
-  background(0);
+   // more code see the repo
+    featureExtrator = ml5.featureExtractor('MobileNet', mobileNetIsReady);
+    classifier = featureExtrator.classification(video, { numLabels: 3 });
+}
 
-  featureExtrator = ml5.featureExtractor('MobileNet', mobileNetIsReady);
-  classifier = featureExtrator.classification(video, { numLabels: 3 }, () => {
-    console.log('classifier is ready!')
-  });
+function mobileNetIsReady() {
+  classifier.load(`${pluginURL}/build/assets/model.json`, customModelIsReady);
+}
 
-  setupControls()
+function customModelIsReady() {
+  classifier.classify(gotResults);
 }
 
 function setupControls() {
@@ -80,9 +70,11 @@ function addLink(title, url) {
 }
 
 function draw() {
-  background(0);
-  image(video, 0, 0, imageWidth, imageHeight - 30);
-  fill(255);
-  textSize(16);
-  text(label, 10, height - 10);
+  if(containerBlock) {
+    background(0);
+    image(video, 0, 0, imageWidth, imageHeight - 30);
+    fill(255);
+    textSize(16);
+    text(label, 10, height - 10);
+  }
 }
