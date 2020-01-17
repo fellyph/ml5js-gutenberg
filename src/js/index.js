@@ -11,12 +11,11 @@ registerBlockType( 'gutenberg-examples/products-block-js', {
 		__( 'Product classifier' ),
 		__( 'ML5.js' ),
 	],
-
 	edit: () => {
 		return (
-			<div>
+			<section>
 				<h2>{ __( 'Product classifier' ) }</h2>
-			</div>
+			</section>
 		);
 	},
 

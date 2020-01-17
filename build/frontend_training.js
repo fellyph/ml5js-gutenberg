@@ -1,7 +1,7 @@
 let mobilenet;
 let classifier;
 let video;
-let label = 'wc thessaloniki';
+let label = 'WordPress And Machine Learning';
 let product1;
 let product2;
 let trainButton;
