@@ -3,7 +3,7 @@ let classifier;
 let video;
 let controlsContainer;
 let containerBlock;
-let label = 'wc thessaloniki';
+let label = 'WordPress And Machine Learning';
 let product1;
 let product2;
 let product3;
